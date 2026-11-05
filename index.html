@@ -15,48 +15,36 @@
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D0%9D%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%BE%D1%80%20%D0%A1%D0%BE%D1%84%D1%80%D0%B8%D0%BD%D0%BE%20%D0%9A%D0%91%D0%A2%22%2C%22short_name%22%3A%22%D0%9D%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%BE%D1%80%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0f19%22%2C%22theme_color%22%3A%22%230b0f19%22%2C%22start_url%22%3A%22.%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2Ff%2Fff%2FWildberries_logo_2021.svg%2F1200px-Wildberries_logo_2021.svg.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
 
     <style>
-        /* БАЗОВАЯ ПАЛИТРА И ПЕРЕМЕННЫЕ */
         :root {
             --bg-color: #0b0f19;
             --card-bg: #151b2b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            
             --border-color: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(203, 17, 171, 0.4);
-            
             --glass-header: rgba(11, 15, 25, 0.85);
-            
             --tag-bg: rgba(255, 255, 255, 0.05);
             --tag-text: #cbd5e1;
-            
             --wb-accent: #cb11ab;
             --wb-gradient: linear-gradient(135deg, #cb11ab 0%, #481173 100%);
             --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.4);
-            
             --highlight-bg: rgba(203, 17, 171, 0.25);
         }
 
-        /* Жёсткое переопределение через повышенную специфичность селектора */
         :root[data-theme="light"] {
             --bg-color: #f1f5f9; 
             --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            
             --border-color: rgba(0, 0, 0, 0.06);
             --border-hover: rgba(203, 17, 171, 0.3);
-            
             --glass-header: rgba(241, 245, 249, 0.9);
-            
             --tag-bg: rgba(15, 23, 42, 0.04);
             --tag-text: #475569;
-            
             --shadow-hover: 0 12px 32px rgba(15, 23, 42, 0.08);
             --highlight-bg: rgba(203, 17, 171, 0.15);
         }
 
-        /* ОБЩИЕ СТИЛИ */
         body {
             background-color: var(--bg-color); 
             color: var(--text-main);
@@ -71,7 +59,6 @@
         ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--wb-accent); }
 
-        /* ЭКРАН ВХОДА */
         #loginScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 1000;
@@ -103,7 +90,6 @@
         button.primary-btn:active { transform: translateY(1px); }
         .error-msg { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; font-weight: 500; }
 
-        /* ОСНОВНОЙ КАРКАС И ШАПКА */
         .container { display: none; max-width: 1280px; margin: 0 auto; animation: fadeIn 0.4s ease; }
         .content-padding { padding: 0 24px 60px 24px; }
         @media (min-width: 768px) { .content-padding { padding: 0 48px 60px 48px; } }
@@ -130,7 +116,6 @@
         .share-btn { background: var(--card-bg); font-weight: 600; font-size: 14px; padding: 10px 20px; gap: 8px; }
         .share-btn:hover { border-color: var(--wb-accent); color: var(--wb-accent); }
 
-        /* УЛУЧШЕННЫЙ ПОИСК С КНОПКОЙ ОЧИСТКИ */
         .search-container { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
         .search-container svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 20px; height: 20px; pointer-events: none; }
         .search-container input { padding-left: 48px; padding-right: 48px; border-radius: 14px; background: var(--card-bg); }
@@ -143,7 +128,6 @@
         }
         .clear-btn:hover { color: var(--text-main); }
 
-        /* ПОДСВЕТКА НАЙДЕННОГО ТЕКСТА */
         mark.highlight {
             background: var(--highlight-bg);
             color: inherit;
@@ -151,7 +135,6 @@
             padding: 0 2px;
         }
 
-        /* ВКЛАДКИ (ТАБЫ) */
         .nav-tabs { display: flex; gap: 4px; flex-wrap: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; border-bottom: 1px solid var(--border-color); }
         .nav-tabs::-webkit-scrollbar { display: none; }
         
@@ -170,7 +153,6 @@
         }
         .tab-button.active .tab-count { background: rgba(203, 17, 171, 0.15); color: var(--wb-accent); }
 
-        /* КАРТОЧНАЯ СЕТКА */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding-top: 32px; }
         .container.searching .nav-tabs { opacity: 0.4; pointer-events: none; }
 
@@ -181,7 +163,6 @@
         }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         
-        /* КАРТОЧКИ РЕСУРСОВ */
         .card { 
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; 
             padding: 24px; min-height: 220px; display: flex; flex-direction: column; 
@@ -205,34 +186,21 @@
             } 
         }
 
-        /* БЕЙДЖИК "ТОП" */
         .top-badge {
-            position: absolute;
-            top: 22px;
-            right: 56px; 
+            position: absolute; top: 22px; right: 56px; 
             background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-main);
-            pointer-events: none;
-            border: none;
-            outline: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 5;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+            color: var(--text-main); pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 5;
         }
         :root[data-theme="light"] .top-badge {
-            background: rgba(0, 0, 0, 0.04);
-            color: var(--text-main);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.04); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; position: relative; }
         .card-title-group { display: flex; align-items: flex-start; gap: 14px; max-width: 85%; }
-        .glass-icon { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; border: none; outline: none; }
+        .glass-icon { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; }
         .emoji-icon { font-size: 28px; line-height: 1; }
         
         .card h3 { margin: 0; font-size: 17px; font-weight: 700; line-height: 1.35; color: var(--text-main); padding-top: 4px; }
@@ -274,7 +242,6 @@
         .card-footer-action { color: var(--text-main); display: flex; align-items: center; gap: 4px; transition: color 0.2s; }
         .card:hover .card-footer-action { color: var(--wb-accent); }
 
-        /* ЭФФЕКТ С КРАСИВЫМИ СКЕЛЕТОНАМИ ЗАГРУЗКИ */
         .skeleton-card {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
             padding: 24px; min-height: 220px; display: flex; flex-direction: column; position: relative; overflow: hidden;
@@ -295,7 +262,6 @@
         .skeleton-line.desc2 { width: 78%; height: 14px; margin-bottom: 24px; }
         .skeleton-line.footer { width: 35%; height: 14px; margin-top: auto; border-radius: 4px; }
 
-        /* ПУСТЫЕ СОСТОЯНИЯ */
         .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; animation: fadeIn 0.3s ease; }
         .empty-state-icon { font-size: 48px; opacity: 0.5; margin-bottom: 16px; display: inline-block; }
         .empty-state h3 { margin: 0 0 8px 0; color: var(--text-main); font-size: 18px; }
@@ -303,7 +269,6 @@
 
         .footer-copyright { text-align: center; margin-top: 80px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; opacity: 0.4; }
 
-        /* УВЕДОМЛЕНИЯ */
         #toast {
             position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
             background: var(--text-main); color: var(--bg-color); 
@@ -333,6 +298,7 @@
         <div class="header-area">
             <h1>Навигатор Софрино</h1>
             <div class="header-actions">
+                <button class="icon-btn" onclick="loadAllDefaultSheets(true)" title="Обновить данные">🔄</button>
                 <button class="icon-btn" onclick="toggleTheme()" id="themeIcon" title="Сменить тему">☀️</button>
                 <button class="share-btn" onclick="shareApp()">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -346,18 +312,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="searchInput" placeholder="Поиск по базе ресурсов..." oninput="filterCards()">
+            <input type="text" id="searchInput" placeholder="Поиск по базе ресурсов (нажмите / для фокуса)..." oninput="filterCards()">
             <button id="clearSearchBtn" class="clear-btn" onclick="clearSearch()">&times;</button>
         </div>
         <nav class="nav-tabs" id="tabsContainer"></nav>
     </div>
 
     <div class="content-padding">
-        <main id="contentArea" class="grid">
-            <div class="skeleton-card"><div class="skeleton-shimmer"></div><div class="skeleton-line title"></div><div class="skeleton-line desc1"></div><div class="skeleton-line desc2"></div><div class="skeleton-line footer"></div></div>
-            <div class="skeleton-card"><div class="skeleton-shimmer"></div><div class="skeleton-line title"></div><div class="skeleton-line desc1"></div><div class="skeleton-line desc2"></div><div class="skeleton-line footer"></div></div>
-            <div class="skeleton-card"><div class="skeleton-shimmer"></div><div class="skeleton-line title"></div><div class="skeleton-line desc1"></div><div class="skeleton-line desc2"></div><div class="skeleton-line footer"></div></div>
-        </main>
+        <main id="contentArea" class="grid"></main>
         <div class="footer-copyright">DEVELOPED BY D. MARTINKEVICH FOR SOFRINOKBT</div>
     </div>
 </div> 
@@ -370,27 +332,19 @@ const SHEET_ID = '1FPHPwKeBmFrMqp2YWTmgN8xvrlsVaKZrrXd5oe8KoWg';
 let linksData = [];
 let currentTab = 'Главная';
 
-// Безопасная инициализация Избранного
 let favorites = [];
 try {
     favorites = JSON.parse(localStorage.getItem('wb_favorites')) || [];
-} catch(e) {
-    console.warn("Storage access denied for favorites.");
-}
+} catch(e) {}
 
-// Безопасная инициализация аналитики кликов
 let clickStats = {};
 try {
     clickStats = JSON.parse(localStorage.getItem('wb_click_stats')) || {};
-} catch(e) {
-    console.warn("Storage access denied for click stats.");
-}
+} catch(e) {}
 
 function trackClick(title) {
     clickStats[title] = (clickStats[title] || 0) + 1;
-    try {
-        localStorage.setItem('wb_click_stats', JSON.stringify(clickStats));
-    } catch(e) {}
+    try { localStorage.setItem('wb_click_stats', JSON.stringify(clickStats)); } catch(e) {}
 }
 
 const defaultTabsConfig = {
@@ -405,9 +359,32 @@ const tabsList = ['Избранное', 'Главная', 'Входящий по
 
 document.addEventListener("DOMContentLoaded", function() {
     initTheme();
+    // Горячие клавиши: '/' для поиска, 'Escape' для сброса
+    document.addEventListener('keydown', function(e) {
+        const searchInput = document.getElementById('searchInput');
+        if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT') {
+            e.preventDefault();
+            searchInput.focus();
+        } else if (e.key === 'Escape' && document.activeElement === searchInput) {
+            clearSearch();
+            searchInput.blur();
+        }
+    });
 });
 
-function loadAllDefaultSheets() {
+function showSkeletons() {
+    const container = document.getElementById('contentArea');
+    const skeletonHTML = '<div class="skeleton-card"><div class="skeleton-shimmer"></div><div class="skeleton-line title"></div><div class="skeleton-line desc1"></div><div class="skeleton-line desc2"></div><div class="skeleton-line footer"></div></div>';
+    container.innerHTML = skeletonHTML.repeat(6);
+}
+
+// Генерация стабильного ID, чтобы "Избранное" не слетало после перезагрузки
+function makeStableId(sheetName, title) {
+    return 'item_' + sheetName + '_' + title.toLowerCase().replace(/[^a-zа-яё0-9]/gi, '_');
+}
+
+function loadAllDefaultSheets(isManualRefresh = false) {
+    showSkeletons();
     linksData = [];
     const targetSheets = ['Главная', 'Входящий поток', 'Интернет Ресурсы', 'Обучение'];
     let completed = 0;
@@ -416,15 +393,22 @@ function loadAllDefaultSheets() {
         fetchSingleSheetData(sheetName, () => {
             completed++;
             if (completed === targetSheets.length) {
+                // Очистка старых невалидных ID из избранного
+                const validIds = new Set(linksData.map(l => l.id));
+                favorites = favorites.filter(id => validIds.has(id));
+                try { localStorage.setItem('wb_favorites', JSON.stringify(favorites)); } catch(e) {}
+
                 renderTabs();
-                renderCards();
+                renderCards(document.getElementById('searchInput').value.trim());
+                if (isManualRefresh) showToast('Данные обновлены');
             }
         });
     });
 }
 
 function fetchSingleSheetData(sheetName, callback) {
-    const callbackName = 'handler_' + Math.random().toString(36).substr(2, 9);
+    const callbackName = 'handler_' + Math.random().toString(36).substring(2, 11);
+    const script = document.createElement('script');
     
     window[callbackName] = function(data) {
         if (data && data.table && data.table.rows) {
@@ -434,28 +418,33 @@ function fetchSingleSheetData(sheetName, callback) {
                 let title = String(row.c[0]?.v || '').trim();
                 let url = String(row.c[5]?.v || '#').trim();
                 
-                if (!title || title === '' || title.toLowerCase() === 'название') return;
+                if (!title || title.toLowerCase() === 'название') return;
 
                 linksData.push({
-                    id: 'item_' + sheetName + '_' + Math.random().toString(36).substr(2, 9),
+                    id: makeStableId(sheetName, title),
                     tab: sheetName,
                     title: title,
-                    desc: row.c[1]?.v || '',
-                    tags: row.c[2]?.v ? String(row.c[2].v).split(',').map(t => t.trim()) : [],
-                    status: row.c[3]?.v || 'blue',
-                    statusText: row.c[4]?.v || 'Инфо',
+                    desc: String(row.c[1]?.v || ''),
+                    tags: row.c[2]?.v ? String(row.c[2].v).split(',').map(t => t.trim()).filter(Boolean) : [],
+                    status: String(row.c[3]?.v || 'blue'),
+                    statusText: String(row.c[4]?.v || 'Инфо'),
                     url: url,
-                    iconEmoji: row.c[6]?.v || '📦',
-                    iconUrl: row.c[7]?.v || ''
+                    iconEmoji: String(row.c[6]?.v || '📦'),
+                    iconUrl: String(row.c[7]?.v || '')
                 });
             });
         }
+        cleanup();
         callback();
     };
 
-    const script = document.createElement('script');
+    function cleanup() {
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
     script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheetName)}&tqx=responseHandler:${callbackName}`;
-    script.onerror = function() { callback(); };
+    script.onerror = function() { cleanup(); callback(); };
     document.body.appendChild(script);
 }
 
@@ -480,11 +469,18 @@ function renderTabs() {
     });
 }
 
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+}
+
 function highlightText(text, query) {
-    if (!query) return text;
-    const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const safeText = escapeHtml(text);
+    if (!query) return safeText;
+    const escapedQuery = escapeHtml(query).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const regex = new RegExp(`(${escapedQuery})`, 'gi');
-    return text.replace(regex, '<mark class="highlight">$1</mark>');
+    return safeText.replace(regex, '<mark class="highlight">$1</mark>');
 }
 
 function renderCards(filterQuery = '') {
@@ -501,79 +497,56 @@ function renderCards(filterQuery = '') {
         return link.tab === currentTab;
     });
 
-    filteredLinks.sort((a, b) => {
-        let clicksA = clickStats[a.title] || 0;
-        let clicksB = clickStats[b.title] || 0;
-        return clicksB - clicksA; 
-    });
+    filteredLinks.sort((a, b) => (clickStats[b.title] || 0) - (clickStats[a.title] || 0));
 
     if (filteredLinks.length === 0) {
         if (isSearching) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <span class="empty-state-icon">🔍</span>
-                    <h3>Ничего не найдено</h3>
-                    <p>По вашему запросу «${filterQuery}» нет результатов.</p>
-                </div>`;
+            container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">🔍</span><h3>Ничего не найдено</h3><p>По вашему запросу «${escapeHtml(filterQuery)}» нет результатов.</p></div>`;
         } else if (currentTab === 'Избранное') {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <span class="empty-state-icon">⭐</span>
-                    <h3>Нет избранных ресурсов</h3>
-                    <p>Нажмите на звёздочку на любой карточке, чтобы она появилась здесь.</p>
-                </div>`;
+            container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">⭐</span><h3>Нет избранных ресурсов</h3><p>Нажмите на звёздочку на любой карточке, чтобы она появилась здесь.</p></div>`;
         } else {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <span class="empty-state-icon">📭</span>
-                    <h3>Вкладка пуста</h3>
-                    <p>На листе «${currentTab}» в Google Таблице пока нет записей.</p>
-                </div>`;
+            container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">📭</span><h3>Вкладка пуста</h3><p>На листе «${escapeHtml(currentTab)}» в Google Таблице пока нет записей.</p></div>`;
         }
         return;
     }
 
     filteredLinks.forEach(link => {
         const isFav = favorites.includes(link.id);
-        
         const displayTitle = highlightText(link.title, filterQuery);
         const displayDesc = highlightText(link.desc, filterQuery).replace(/\n/g, '<br>');
         
         const tagsHtml = link.tags && link.tags.length > 0 
             ? `<div class="tag-container">${link.tags.map(t => {
                 const displayTag = highlightText(t, filterQuery);
-                return `<span class="tag" onclick="filterByTag(event, '${t.replace(/'/g, "\\'")}')">${displayTag}</span>`;
+                const safeAttrTag = escapeHtml(t);
+                return `<span class="tag" data-tag="${safeAttrTag}" onclick="filterByTag(event, this.getAttribute('data-tag'))">${displayTag}</span>`;
               }).join('')}</div>` 
             : '';
             
         const iconHtml = link.iconUrl 
-            ? `<img src="${link.iconUrl}" class="glass-icon" alt="icon">` 
-            : `<span class="emoji-icon">${link.iconEmoji}</span>`;
+            ? `<img src="${escapeHtml(link.iconUrl)}" class="glass-icon" alt="icon">` 
+            : `<span class="emoji-icon">${escapeHtml(link.iconEmoji)}</span>`;
 
         const isShare = link.tags && link.tags.includes('Ссылка');
         const safeStatus = link.status.toLowerCase().trim();
-
-        let badgeHtml = '';
-        if (clickStats[link.title] >= 5) {
-            badgeHtml = `<div class="top-badge">🔥 Топ</div>`;
-        }
+        const badgeHtml = (clickStats[link.title] >= 5) ? `<div class="top-badge">🔥 Топ</div>` : '';
 
         const cardContent = `
-            <div class="card status-${safeStatus}">
+            <div class="card status-${escapeHtml(safeStatus)}">
                 ${badgeHtml}
                 <div class="card-header">
                     <div class="card-title-group">
                         ${iconHtml}
                         <h3>${displayTitle}</h3>
                     </div>
-                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${link.id}')">
+                    <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${escapeHtml(link.id)}" onclick="toggleFavorite(event, this.getAttribute('data-id'))">
                         ${isFav ? '★' : '☆'}
                     </button>
                 </div>
                 <p>${displayDesc}</p>
                 ${tagsHtml}
                 <div class="card-footer">
-                    <span class="status"><span class="dot"></span>${link.statusText}</span>
+                    <span class="status"><span class="dot"></span>${escapeHtml(link.statusText)}</span>
                     <span class="card-footer-action">${isShare ? 'Поделиться ↗' : 'Открыть ↗'}</span>
                 </div>
             </div>
@@ -591,7 +564,7 @@ function renderCards(filterQuery = '') {
             container.appendChild(wrapper);
         } else {
             const a = document.createElement('a');
-            a.className = 'card-link'; a.href = link.url; a.target = '_blank'; a.innerHTML = cardContent;
+            a.className = 'card-link'; a.href = link.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.innerHTML = cardContent;
             a.onclick = (e) => {
                 if(e.target.closest('.fav-btn') || e.target.closest('.tag')) {
                     e.preventDefault();
@@ -626,9 +599,7 @@ function toggleFavorite(event, id) {
     } else {
         favorites.push(id); showToast('Добавлено в избранное');
     }
-    try {
-        localStorage.setItem('wb_favorites', JSON.stringify(favorites));
-    } catch(e) {}
+    try { localStorage.setItem('wb_favorites', JSON.stringify(favorites)); } catch(e) {}
     renderTabs(); 
     if (currentTab === 'Избранное') renderCards();
     else {
@@ -652,21 +623,14 @@ function initTheme() {
 
 function updateThemeIcon() {
     const icon = document.getElementById('themeIcon');
-    if (icon) {
-        icon.innerText = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙' : '☀️';
-    }
+    if (icon) icon.innerText = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙' : '☀️';
 }
 
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
     document.documentElement.setAttribute('data-theme', newTheme);
-    try {
-        localStorage.setItem('theme', newTheme);
-    } catch (e) {
-        console.warn("Could not save theme selection to localStorage.");
-    }
+    try { localStorage.setItem('theme', newTheme); } catch (e) {}
     updateThemeIcon();
 }
 
