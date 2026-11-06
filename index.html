@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Навигатор Софрино КБТ</title>
     
-    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Wildberries_logo_2021.svg/1200px-Wildberries_logo_2021.svg.png">
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Wildberries_logo_2021.svg/1200px-Wildberries_logo_2021.svg.png">
+    <!-- Подключаем нашу локальную иконку -->
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="apple-touch-icon" href="./icon.png">
     
     <meta name="theme-color" content="#0b0f19">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D0%9D%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%BE%D1%80%20%D0%A1%D0%BE%D1%84%D1%80%D0%B8%D0%BD%D0%BE%20%D0%9A%D0%91%D0%A2%22%2C%22short_name%22%3A%22%D0%9D%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%BE%D1%80%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0f19%22%2C%22theme_color%22%3A%22%230b0f19%22%2C%22start_url%22%3A%22.%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fthumb%2Ff%2Fff%2FWildberries_logo_2021.svg%2F1200px-Wildberries_logo_2021.svg.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <!-- Подключаем внешний манифест -->
+    <link rel="manifest" href="./manifest.json">
 
     <style>
         :root {
@@ -657,15 +659,55 @@ function clearSearch(shouldRender = true) {
     if (shouldRender) renderCards();
 }
 
-function checkPassword() {
-    if (document.getElementById('passwordInput').value === "50062129" || sessionStorage.getItem('isLoggedIn') === 'true') {
-        sessionStorage.setItem('isLoggedIn', 'true');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainContainer').style.display = 'block';
-        loadAllDefaultSheets(); 
-    } else {
-        document.getElementById('errorMsg').style.display = 'block';
-        document.getElementById('passwordInput').value = '';
+// ПРОВЕРКА ПАРОЛЯ ЧЕРЕЗ GOOGLE APPS SCRIPT
+async function checkPassword() {
+    const pwdInput = document.getElementById('passwordInput');
+    const pwd = pwdInput.value.trim();
+    const btn = document.querySelector('.primary-btn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (!pwd) return;
+
+    // Включаем режим загрузки на кнопке
+    const originalBtnText = btn.innerText;
+    btn.innerText = "Проверка...";
+    btn.disabled = true;
+    errorMsg.style.display = 'none';
+
+    // Ссылка на ваш скрипт
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
+
+    try {
+        let formData = new FormData();
+        formData.append('password', pwd);
+
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+
+        if (result.success) {
+            sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('userName', result.user);
+            
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            
+            showToast('Добро пожаловать, ' + result.user + '!');
+            loadAllDefaultSheets(); 
+        } else {
+            errorMsg.innerText = "Неверный пароль. Попробуйте еще раз.";
+            errorMsg.style.display = 'block';
+            pwdInput.value = '';
+        }
+    } catch (error) {
+        errorMsg.innerText = "Ошибка соединения. Проверьте интернет.";
+        errorMsg.style.display = 'block';
+    } finally {
+        btn.innerText = originalBtnText;
+        btn.disabled = false;
     }
 }
 
@@ -701,6 +743,17 @@ async function shareTargetLink(url, title, text) {
         catch (e) { showToast('Ошибка копирования'); }
     }
 }
+</script>
+
+<!-- РЕГИСТРАЦИЯ SERVICE WORKER ДЛЯ УСТАНОВКИ PWA (ИКОНКИ НА ТЕЛЕФОН/ПК) -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker зарегистрирован успешно.'))
+                .catch(err => console.log('Ошибка регистрации Service Worker:', err));
+        });
+    }
 </script>
 </body>
 </html>
