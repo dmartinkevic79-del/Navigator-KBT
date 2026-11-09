@@ -312,17 +312,29 @@ async function requestServer(action, payload = {}) {
     try {
         const resp = await fetch(GAS_ENDPOINT, { 
             method: 'POST', 
+            // Отправляем как простой текст, чтобы обойти CORS-ограничения браузера
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ action, ...payload }), 
             signal: controller.signal,
             cache: 'no-store',
             redirect: 'follow'
         });
+        
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
-        return await resp.json();
-    } finally { clearTimeout(timer); }
+        
+        // ВАЖНО: Читаем ответ как текст, а затем парсим в JSON
+        const rawText = await resp.text();
+        try {
+            return JSON.parse(rawText);
+        } catch (e) {
+            console.error("Ошибка парсинга ответа:", rawText);
+            throw new Error("Неверный формат ответа от сервера");
+        }
+        
+    } finally { 
+        clearTimeout(timer); 
+    }
 }
-
 async function handleManualLogin() {
     const pwd = document.getElementById('passwordInput').value.trim();
     if (!pwd) return;
