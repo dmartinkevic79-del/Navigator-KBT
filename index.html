@@ -177,10 +177,7 @@
 <div id="toast">Уведомление</div>
 
 <script>
-// ==========================================
-// ВСТАВЬТЕ СЮДА НОВУЮ ССЫЛКУ ИЗ APPS SCRIPT!
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec/exec';
-// ==========================================
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
 
 const STORAGE_KEYS = {
     token: 'sof_auth_token',
@@ -205,13 +202,10 @@ function initApp() {
     initTheme();
     bindEvents();
     
-    // Тихая миграция старых сессий: если у пользователя висит старый флаг "isLoggedIn", обменяем его
     const oldLogin = sessionStorage.getItem('isLoggedIn');
     let savedToken = localStorage.getItem(STORAGE_KEYS.token);
     
-    // Если есть старый PIN в sessionStorage или localStorage (если вы его так сохраняли)
     if (oldLogin === 'true' && !savedToken) {
-        // Если мы не знаем PIN, просим перелогиниться 1 раз для безопасности
         sessionStorage.removeItem('isLoggedIn');
         showLoginScreen();
         return;
