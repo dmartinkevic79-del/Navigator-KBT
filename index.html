@@ -177,7 +177,9 @@
 <div id="toast">Уведомление</div>
 
 <script>
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
+// ==========================================
+// ВСТАВЬТЕ СЮДА ВАШУ НОВУЮ ССЫЛКУ (УБЕДИТЕСЬ ЧТО ОНА ОДНА И ПРАВИЛЬНАЯ)
+const const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
 
 const STORAGE_KEYS = {
     token: 'sof_auth_token',
@@ -312,23 +314,19 @@ async function requestServer(action, payload = {}) {
     try {
         const resp = await fetch(GAS_ENDPOINT, { 
             method: 'POST', 
-            // Отправляем как простой текст для обхода CORS
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ action, ...payload }), 
             signal: controller.signal,
             cache: 'no-store',
             redirect: 'follow'
         });
+        
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         
-        // ВАЖНО: Читаем как текст, затем парсим JSON (решает проблему ответа от редиректа)
-        const rawText = await resp.text();
-        try {
-            return JSON.parse(rawText);
-        } catch(e) {
-            throw new Error("Неверный формат ответа");
-        }
-    } finally { clearTimeout(timer); }
+        return await resp.json();
+    } finally { 
+        clearTimeout(timer); 
+    }
 }
 
 async function handleManualLogin() {
@@ -572,7 +570,6 @@ async function shareTargetLink(url, title, text) {
 }
 </script>
 
-<!-- Установка PWA -->
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
