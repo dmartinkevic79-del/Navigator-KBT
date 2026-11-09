@@ -91,6 +91,13 @@
         .card.status-green { --card-status-color: #10b981; }
         @media (min-width: 1024px) { .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: var(--border-hover); } }
 
+        .top-badge {
+            position: absolute; top: 20px; right: 52px;
+            background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(12px);
+            padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 600;
+            color: var(--text-main); pointer-events: none; z-index: 5;
+        }
+
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .card-title-group { display: flex; align-items: flex-start; gap: 12px; max-width: 85%; }
         .glass-icon { width: 32px; height: 32px; object-fit: contain; border-radius: 8px; }
@@ -100,7 +107,7 @@
         .fav-btn:hover { opacity: 1; transform: scale(1.1); }
         .fav-btn.active { color: #f59e0b; opacity: 1; }
 
-        .card p { color: var(--text-muted); font-size: 13.5px; line-height: 1.5; flex-grow: 1; margin: 0 0 16px 0; }
+        .card p { color: var(--text-muted); font-size: 13.5px; line-height: 1.5; flex-grow: 1; margin: 0 0 16px 0; white-space: pre-line; }
         .tag-container { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
         .tag { background: var(--tag-bg); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--tag-text); cursor: pointer; transition: 0.2s; }
         .tag:hover { border-color: var(--wb-accent); color: var(--wb-accent); background: rgba(203, 17, 171, 0.08); }
@@ -142,7 +149,7 @@
         <h2>Софрино КБТ</h2>
         <p>Навигатор корпоративных ресурсов</p>
         <div class="input-wrapper">
-            <input type="password" id="passwordInput" placeholder="Введите пароль">
+            <input type="password" id="passwordInput" placeholder="Введите пароль" autocomplete="off">
         </div>
         <button class="primary-btn" id="loginBtn">Войти в систему</button>
         <div id="errorMsg" class="error-msg">Неверный пароль. Попробуйте еще раз.</div>
@@ -177,14 +184,12 @@
 <div id="toast">Уведомление</div>
 
 <script>
-// ==========================================
-// ВСТАВЬТЕ СЮДА ВАШУ НОВУЮ ССЫЛКУ (УБЕДИТЕСЬ ЧТО ОНА ОДНА И ПРАВИЛЬНАЯ)
-const const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
 
 const STORAGE_KEYS = {
     token: 'sof_auth_token',
     user: 'sof_auth_user',
-    favorites: 'sof_favorites',
+    favorites: 'wb_favorites',
     theme: 'sof_theme',
     cache: 'sof_data_cache'
 };
@@ -192,7 +197,7 @@ const STORAGE_KEYS = {
 let linksData = [];
 let currentTab = 'Главная';
 let favorites = safeGetJSON(STORAGE_KEYS.favorites, []);
-let clickStats = safeGetJSON('sof_click_stats', {});
+let clickStats = safeGetJSON('wb_click_stats', {});
 let searchTimeout = null;
 
 const defaultTabsConfig = { 'Избранное': '⭐ Избранное', 'Главная': '🏠 Главная', 'Входящий поток': '📥 Входящий поток', 'Интернет Ресурсы': '🌐 Интернет Ресурсы', 'Обучение': '🎓 Обучение' };
@@ -289,22 +294,29 @@ function bindEvents() {
     });
 }
 
+// ИСПРАВЛЕНО: используем правильные ID контейнеров (loginScreen и mainContainer)
 function showLoginScreen(msg = '') {
-    document.getElementById('appContainer').style.display = 'none';
-    document.getElementById('authOverlay').style.display = 'flex';
+    const mainEl = document.getElementById('mainContainer');
+    const loginEl = document.getElementById('loginScreen');
+    if (mainEl) mainEl.style.display = 'none';
+    if (loginEl) loginEl.style.display = 'flex';
     const err = document.getElementById('errorMsg');
-    if (msg) { err.textContent = msg; err.style.display = 'block'; }
-    else { err.style.display = 'none'; }
+    if (err) {
+        if (msg) { err.textContent = msg; err.style.display = 'block'; }
+        else { err.style.display = 'none'; }
+    }
 }
 
 function showAppScreen() {
-    document.getElementById('authOverlay').style.display = 'none';
-    document.getElementById('appContainer').style.display = 'flex';
+    const loginEl = document.getElementById('loginScreen');
+    const mainEl = document.getElementById('mainContainer');
+    if (loginEl) loginEl.style.display = 'none';
+    if (mainEl) mainEl.style.display = 'flex';
 }
 
 function updateUserBadge(name) {
     const badge = document.getElementById('userBadge');
-    if (name && name !== 'Сотрудник') { badge.textContent = name; badge.style.display = 'inline-block'; }
+    if (name && name !== 'Сотрудник') { badge.textContent = '👤 ' + name; badge.style.display = 'inline-block'; }
     else { badge.style.display = 'none'; }
 }
 
@@ -320,13 +332,10 @@ async function requestServer(action, payload = {}) {
             cache: 'no-store',
             redirect: 'follow'
         });
-        
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
-        
-        return await resp.json();
-    } finally { 
-        clearTimeout(timer); 
-    }
+        const rawText = await resp.text();
+        return JSON.parse(rawText);
+    } finally { clearTimeout(timer); }
 }
 
 async function handleManualLogin() {
@@ -346,12 +355,15 @@ async function handleManualLogin() {
             document.getElementById('passwordInput').value = '';
             showAppScreen();
             applyData(data, false);
-            showToast(`Добро пожаловать, ${data.user || 'коллега'}!`);
+            showToast(`👋 Добро пожаловать, ${data.user || 'коллега'}!`);
         } else {
-            err.textContent = data.error || 'Неверный пароль'; err.style.display = 'block';
+            err.textContent = (data && data.error) ? data.error : 'Неверный пароль';
+            err.style.display = 'block';
         }
     } catch (e) {
-        err.textContent = 'Ошибка сети'; err.style.display = 'block';
+        console.error('Login error:', e);
+        err.textContent = 'Ошибка соединения с сервером';
+        err.style.display = 'block';
     } finally {
         btn.disabled = false; btn.textContent = 'Войти в систему';
     }
@@ -370,7 +382,9 @@ async function loadProtectedData(token, isManual = false) {
         const data = await requestServer('getData', { token });
         if (!data || !data.ok) {
             localStorage.removeItem(STORAGE_KEYS.token);
-            showLoginScreen(data.error || 'Сессия истекла');
+            localStorage.removeItem(STORAGE_KEYS.user);
+            localStorage.removeItem(STORAGE_KEYS.cache);
+            showLoginScreen((data && data.error) || 'Сессия истекла');
             return;
         }
         if (data.sessionToken) localStorage.setItem(STORAGE_KEYS.token, data.sessionToken);
@@ -396,7 +410,7 @@ function applyData(data, isManual) {
     
     renderTabs();
     renderCards(document.getElementById('searchInput').value.trim());
-    if (isManual) showToast('Данные обновлены');
+    if (isManual) showToast('✅ Данные обновлены');
 }
 
 function showSkeletons() {
@@ -432,7 +446,7 @@ function renderCards(filterQuery = '') {
     const qLower = filterQuery.toLowerCase();
     
     let filtered = linksData.filter(link => {
-        if (isSearch) return link.title.toLowerCase().includes(qLower) || link.desc.toLowerCase().includes(qLower) || link.tags.some(t => t.toLowerCase().includes(qLower));
+        if (isSearch) return link.title.toLowerCase().includes(qLower) || link.desc.toLowerCase().includes(qLower) || (link.tags && link.tags.some(t => t.toLowerCase().includes(qLower)));
         if (currentTab === 'Избранное') return favorites.includes(link.id);
         return link.tab === currentTab;
     });
@@ -449,15 +463,15 @@ function renderCards(filterQuery = '') {
     const frag = document.createDocumentFragment();
     filtered.forEach(link => {
         const isFav = favorites.includes(link.id);
-        const isShare = link.tags.includes('Ссылка');
+        const isShare = link.tags && link.tags.includes('Ссылка');
         
         const wrapper = document.createElement(isShare ? 'div' : 'a');
         wrapper.className = 'card-link';
         wrapper.dataset.title = link.title; wrapper.dataset.url = link.url;
-        if (!isShare) { wrapper.href = link.url; wrapper.target = '_blank'; wrapper.rel = 'noopener'; }
+        if (!isShare) { wrapper.href = link.url; wrapper.target = '_blank'; wrapper.rel = 'noopener noreferrer'; }
 
         const card = document.createElement('div');
-        card.className = 'card status-' + link.status.toLowerCase();
+        card.className = 'card status-' + (link.status || 'blue').toLowerCase();
         
         if (clickStats[link.title] >= 5) {
             const badge = document.createElement('div'); badge.className = 'top-badge'; badge.textContent = '🔥 Топ';
@@ -471,7 +485,7 @@ function renderCards(filterQuery = '') {
             const img = document.createElement('img'); img.src = link.iconUrl; img.className = 'glass-icon';
             titleGrp.appendChild(img);
         } else {
-            const emj = document.createElement('span'); emj.className = 'emoji-icon'; emj.textContent = link.iconEmoji;
+            const emj = document.createElement('span'); emj.className = 'emoji-icon'; emj.textContent = link.iconEmoji || '📦';
             titleGrp.appendChild(emj);
         }
         
@@ -485,7 +499,7 @@ function renderCards(filterQuery = '') {
         const p = document.createElement('p'); p.appendChild(highlight(link.desc, filterQuery));
         card.appendChild(p);
 
-        if (link.tags.length > 0) {
+        if (link.tags && link.tags.length > 0) {
             const tagsDiv = document.createElement('div'); tagsDiv.className = 'tag-container';
             link.tags.forEach(t => {
                 const span = document.createElement('span'); span.className = 'tag'; span.dataset.tag = t;
@@ -497,7 +511,7 @@ function renderCards(filterQuery = '') {
         const foot = document.createElement('div'); foot.className = 'card-footer';
         const stDiv = document.createElement('div'); stDiv.className = 'status';
         const dot = document.createElement('div'); dot.className = 'dot';
-        stDiv.append(dot, document.createTextNode(link.statusText));
+        stDiv.append(dot, document.createTextNode(link.statusText || 'Инфо'));
         
         const actDiv = document.createElement('div'); actDiv.className = 'card-footer-action'; actDiv.textContent = isShare ? 'Поделиться ↗' : 'Открыть ↗';
         foot.append(stDiv, actDiv); card.appendChild(foot);
@@ -509,22 +523,23 @@ function renderCards(filterQuery = '') {
 
 function highlight(text, query) {
     const frag = document.createDocumentFragment();
-    if (!query) { frag.appendChild(document.createTextNode(text)); return frag; }
+    const safeText = String(text || '');
+    if (!query) { frag.appendChild(document.createTextNode(safeText)); return frag; }
     const regex = new RegExp(`(${query.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
     let last = 0, match;
-    while ((match = regex.exec(text)) !== null) {
-        if (match.index > last) frag.appendChild(document.createTextNode(text.substring(last, match.index)));
+    while ((match = regex.exec(safeText)) !== null) {
+        if (match.index > last) frag.appendChild(document.createTextNode(safeText.substring(last, match.index)));
         const m = document.createElement('mark'); m.className = 'highlight'; m.textContent = match[0];
         frag.appendChild(m); last = regex.lastIndex;
     }
-    if (last < text.length) frag.appendChild(document.createTextNode(text.substring(last)));
+    if (last < safeText.length) frag.appendChild(document.createTextNode(safeText.substring(last)));
     return frag;
 }
 
 function toggleFavorite(id) {
     const idx = favorites.indexOf(id);
-    if (idx > -1) { favorites.splice(idx, 1); showToast('Удалено'); }
-    else { favorites.push(id); showToast('Добавлено в избранное'); }
+    if (idx > -1) { favorites.splice(idx, 1); showToast('Удалено из избранного'); }
+    else { favorites.push(id); showToast('⭐ Добавлено в избранное'); }
     safeSetJSON(STORAGE_KEYS.favorites, favorites);
     renderTabs(); if (currentTab === 'Избранное') renderCards();
     else {
@@ -535,7 +550,7 @@ function toggleFavorite(id) {
 
 function trackClick(title) {
     clickStats[title] = (clickStats[title] || 0) + 1;
-    safeSetJSON('sof_click_stats', clickStats);
+    safeSetJSON('wb_click_stats', clickStats);
 }
 
 function safeGetJSON(key, fb) { try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : fb; } catch(e) { return fb; } }
@@ -560,7 +575,7 @@ function showToast(msg) {
 }
 
 async function shareApp() {
-    const u = window.location.href;
+    const u = window.location.origin + window.location.pathname;
     if (navigator.share) navigator.share({ title: 'Навигатор Софрино', url: u }).catch(()=>{});
     else { navigator.clipboard.writeText(u); showToast('Ссылка скопирована'); }
 }
@@ -572,7 +587,9 @@ async function shareTargetLink(url, title, text) {
 
 <script>
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').then(reg => reg.update()).catch(()=>{});
+        });
     }
 </script>
 </body>
