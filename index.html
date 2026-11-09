@@ -2,283 +2,137 @@
 <html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; font-src 'self' data:; object-src 'none'; base-uri 'self';">
     <title>Навигатор Софрино КБТ</title>
     
-    <!-- Подключаем нашу локальную иконку -->
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="apple-touch-icon" href="./icon.png">
     
     <meta name="theme-color" content="#0b0f19">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <!-- Подключаем внешний манифест -->
     <link rel="manifest" href="./manifest.json">
 
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #151b2b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(203, 17, 171, 0.4);
-            --glass-header: rgba(11, 15, 25, 0.85);
-            --tag-bg: rgba(255, 255, 255, 0.05);
-            --tag-text: #cbd5e1;
-            --wb-accent: #cb11ab;
-            --wb-gradient: linear-gradient(135deg, #cb11ab 0%, #481173 100%);
-            --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.4);
-            --highlight-bg: rgba(203, 17, 171, 0.25);
+            --bg-color: #0b0f19; --card-bg: #151b2b; --text-main: #f8fafc; --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08); --border-hover: rgba(203, 17, 171, 0.4);
+            --glass-header: rgba(11, 15, 25, 0.85); --tag-bg: rgba(255, 255, 255, 0.05);
+            --tag-text: #cbd5e1; --wb-accent: #cb11ab; --wb-gradient: linear-gradient(135deg, #cb11ab 0%, #481173 100%);
+            --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.4); --highlight-bg: rgba(203, 17, 171, 0.25);
         }
-
         :root[data-theme="light"] {
-            --bg-color: #f1f5f9; 
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: rgba(0, 0, 0, 0.06);
-            --border-hover: rgba(203, 17, 171, 0.3);
-            --glass-header: rgba(241, 245, 249, 0.9);
-            --tag-bg: rgba(15, 23, 42, 0.04);
-            --tag-text: #475569;
-            --shadow-hover: 0 12px 32px rgba(15, 23, 42, 0.08);
-            --highlight-bg: rgba(203, 17, 171, 0.15);
+            --bg-color: #f1f5f9; --card-bg: #ffffff; --text-main: #0f172a; --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.06); --border-hover: rgba(203, 17, 171, 0.3);
+            --glass-header: rgba(241, 245, 249, 0.9); --tag-bg: rgba(15, 23, 42, 0.04);
+            --tag-text: #475569; --shadow-hover: 0 12px 32px rgba(15, 23, 42, 0.08); --highlight-bg: rgba(203, 17, 171, 0.15);
         }
-
-        body {
-            background-color: var(--bg-color); 
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0; 
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: -apple-system, sans-serif; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; transition: background-color 0.3s, color 0.3s; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.2); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--wb-accent); }
 
-        #loginScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .login-box {
-            background: var(--card-bg); 
-            border: 1px solid var(--border-color);
-            padding: 40px; border-radius: 20px; text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1); width: 90%; max-width: 360px;
-        }
-        .login-box h2 { margin-top: 0; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; }
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
+        .login-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.1); width: 100%; max-width: 360px; }
+        .login-box h2 { margin-top: 0; font-weight: 700; font-size: 24px; }
         .login-box p { color: var(--text-muted); margin-bottom: 30px; font-size: 14px; }
-        
-        .input-wrapper { position: relative; margin-bottom: 20px; }
-        input {
-            width: 100%; box-sizing: border-box; padding: 14px 20px;
-            border-radius: 12px; border: 1px solid var(--border-color); outline: none;
-            background: var(--bg-color); color: var(--text-main); 
-            font-size: 16px; transition: all 0.2s;
-        }
+        .input-wrapper { margin-bottom: 20px; }
+        input { width: 100%; box-sizing: border-box; padding: 14px 20px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-main); font-size: 16px; outline: none; transition: all 0.2s; text-align: center; }
         input:focus { border-color: var(--wb-accent); box-shadow: 0 0 0 3px rgba(203, 17, 171, 0.15); }
-        .login-box input { text-align: center; }
-        
-        button.primary-btn {
-            background: var(--wb-gradient); color: white; border: none; padding: 14px 25px;
-            border-radius: 12px; font-size: 16px; cursor: pointer; transition: all 0.2s; width: 100%; font-weight: 600;
-        }
-        button.primary-btn:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(203, 17, 171, 0.3); }
-        button.primary-btn:active { transform: translateY(1px); }
+        button.primary-btn { background: var(--wb-gradient); color: white; border: none; padding: 14px 25px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.2s, transform 0.1s; }
+        button.primary-btn:hover { opacity: 0.95; }
+        button.primary-btn:active { transform: scale(0.98); }
+        button.primary-btn:disabled { opacity: 0.6; cursor: wait; }
         .error-msg { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; font-weight: 500; }
 
-        .container { display: none; max-width: 1280px; margin: 0 auto; animation: fadeIn 0.4s ease; }
-        .content-padding { padding: 0 24px 60px 24px; }
+        .container { display: none; max-width: 1280px; margin: 0 auto; animation: fadeIn 0.3s; flex-direction: column; min-height: 100vh; }
+        .content-padding { padding: 0 24px 60px 24px; flex-grow: 1; }
         @media (min-width: 768px) { .content-padding { padding: 0 48px 60px 48px; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .sticky-header {
-            position: sticky; top: 0; z-index: 100;
-            background: var(--glass-header); 
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            padding: 24px 24px 16px 24px; border-bottom: 1px solid var(--border-color);
-        }
-        @media (min-width: 768px) { .sticky-header { padding: 32px 48px 16px 48px; } }
+        .sticky-header { position: sticky; top: 0; z-index: 100; background: var(--glass-header); backdrop-filter: blur(24px); padding: calc(24px + env(safe-area-inset-top)) 24px 16px 24px; border-bottom: 1px solid var(--border-color); }
+        @media (min-width: 768px) { .sticky-header { padding: calc(32px + env(safe-area-inset-top)) 48px 16px 48px; } }
 
         .header-area { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-        .header-area h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-        .header-actions { display: flex; gap: 12px; }
-
-        .icon-btn, .share-btn {
-            background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); 
-            border-radius: 10px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
-        }
-        .icon-btn { padding: 10px 14px; font-size: 18px; }
+        .header-area h1 { margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .user-badge { font-size: 11px; background: rgba(203, 17, 171, 0.15); color: #ff71e1; padding: 4px 10px; border-radius: 100px; font-weight: 700; border: 1px solid rgba(203, 17, 171, 0.3); display: none; }
+        .header-actions { display: flex; gap: 10px; }
+        .icon-btn, .share-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; height: 40px; }
+        .icon-btn { width: 40px; font-size: 18px; }
         .icon-btn:hover { border-color: var(--text-muted); }
-        .share-btn { background: var(--card-bg); font-weight: 600; font-size: 14px; padding: 10px 20px; gap: 8px; }
+        .share-btn { font-weight: 600; font-size: 13px; padding: 0 16px; gap: 8px; }
         .share-btn:hover { border-color: var(--wb-accent); color: var(--wb-accent); }
 
         .search-container { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
-        .search-container svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 20px; height: 20px; pointer-events: none; }
-        .search-container input { padding-left: 48px; padding-right: 48px; border-radius: 14px; background: var(--card-bg); }
-        
-        .clear-btn {
-            position: absolute; right: 16px; background: transparent; border: none; outline: none;
-            color: var(--text-muted); font-size: 22px; cursor: pointer; display: none;
-            align-items: center; justify-content: center; padding: 0; width: 24px; height: 24px;
-            transition: color 0.2s;
-        }
+        .search-container svg { position: absolute; left: 16px; color: var(--text-muted); width: 20px; height: 20px; pointer-events: none; }
+        .search-container input { padding-left: 48px; padding-right: 48px; text-align: left; }
+        .clear-btn { position: absolute; right: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; display: none; width: 30px; height: 30px; align-items: center; justify-content: center; }
         .clear-btn:hover { color: var(--text-main); }
+        mark.highlight { background: var(--highlight-bg); color: inherit; border-radius: 3px; padding: 0 2px; }
 
-        mark.highlight {
-            background: var(--highlight-bg);
-            color: inherit;
-            border-radius: 3px;
-            padding: 0 2px;
-        }
-
-        .nav-tabs { display: flex; gap: 4px; flex-wrap: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; border-bottom: 1px solid var(--border-color); }
+        .nav-tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--border-color); scrollbar-width: none; }
         .nav-tabs::-webkit-scrollbar { display: none; }
-        
-        .tab-button { 
-            background: transparent; border: none; outline: none; color: var(--text-muted); 
-            padding: 12px 16px; margin-bottom: -1px; border-bottom: 2px solid transparent; 
-            cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 14px; 
-            white-space: nowrap; display: flex; align-items: center; gap: 8px;
-        }
-        .tab-button:hover { color: var(--text-main); }
-        .tab-button.active { color: var(--text-main); border-bottom-color: var(--wb-accent); }
-
-        .tab-count { 
-            background: var(--border-color); color: var(--text-muted); 
-            padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700; 
-        }
+        .tab-button { background: transparent; border: none; color: var(--text-muted); padding: 12px 16px; margin-bottom: -1px; border-bottom: 2px solid transparent; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .tab-button:hover, .tab-button.active { color: var(--text-main); }
+        .tab-button.active { border-bottom-color: var(--wb-accent); }
+        .tab-count { background: var(--border-color); color: var(--text-muted); padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700; }
         .tab-button.active .tab-count { background: rgba(203, 17, 171, 0.15); color: var(--wb-accent); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding-top: 32px; }
-        .container.searching .nav-tabs { opacity: 0.4; pointer-events: none; }
-
-        .card-link { 
-            text-decoration: none; color: inherit; display: block; outline: none; position: relative; border-radius: 16px; 
-            opacity: 0; transform: translateY(12px);
-            animation: fadeInUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding-top: 24px; }
+        .card-link { text-decoration: none; color: inherit; display: block; outline: none; border-radius: 16px; animation: fadeInUp 0.3s forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .card { 
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; 
-            padding: 24px; min-height: 220px; display: flex; flex-direction: column; 
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; 
-            position: relative; overflow: hidden;
-        }
-        .card::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-            background-color: var(--card-status-color, transparent);
-        }
-        
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; min-height: 200px; display: flex; flex-direction: column; position: relative; overflow: hidden; transition: 0.2s; }
+        .card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: var(--card-status-color, transparent); }
         .card.status-blue { --card-status-color: #3b82f6; }
         .card.status-red { --card-status-color: #ef4444; }
         .card.status-green { --card-status-color: #10b981; }
+        @media (min-width: 1024px) { .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: var(--border-hover); } }
 
-        @media (min-width: 1024px) { 
-            .card:hover { 
-                transform: translateY(-3px); 
-                box-shadow: var(--shadow-hover); 
-                border-color: var(--border-hover); 
-            } 
-        }
-
-        .top-badge {
-            position: absolute; top: 22px; right: 56px; 
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
-            color: var(--text-main); pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 5;
-        }
-        :root[data-theme="light"] .top-badge {
-            background: rgba(0, 0, 0, 0.04); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; position: relative; }
-        .card-title-group { display: flex; align-items: flex-start; gap: 14px; max-width: 85%; }
-        .glass-icon { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; }
-        .emoji-icon { font-size: 28px; line-height: 1; }
-        
-        .card h3 { margin: 0; font-size: 17px; font-weight: 700; line-height: 1.35; color: var(--text-main); padding-top: 4px; }
-        
-        .fav-btn { 
-            background: transparent; border: none; outline: none; cursor: pointer; font-size: 22px; 
-            color: var(--text-muted); transition: all 0.2s; padding: 0; 
-            opacity: 0.6; display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .card-title-group { display: flex; align-items: flex-start; gap: 12px; max-width: 85%; }
+        .glass-icon { width: 32px; height: 32px; object-fit: contain; border-radius: 8px; }
+        .emoji-icon { font-size: 26px; line-height: 1; }
+        .card h3 { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; color: var(--text-main); padding-top: 2px; }
+        .fav-btn { background: transparent; border: none; cursor: pointer; font-size: 22px; color: var(--text-muted); opacity: 0.6; padding: 0; transition: 0.2s; z-index: 10; display: flex; align-items: center; justify-content: center; }
         .fav-btn:hover { opacity: 1; transform: scale(1.1); }
         .fav-btn.active { color: #f59e0b; opacity: 1; }
 
-        .card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; flex-grow: 1; margin: 0 0 20px 0; }
+        .card p { color: var(--text-muted); font-size: 13.5px; line-height: 1.5; flex-grow: 1; margin: 0 0 16px 0; }
+        .tag-container { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+        .tag { background: var(--tag-bg); border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--tag-text); cursor: pointer; transition: 0.2s; }
+        .tag:hover { border-color: var(--wb-accent); color: var(--wb-accent); background: rgba(203, 17, 171, 0.08); }
         
-        .tag-container { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; max-height: 52px; overflow: hidden; }
-        
-        .tag { 
-            background: var(--tag-bg); border: 1px solid var(--border-color); padding: 4px 10px; 
-            border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--tag-text); 
-            cursor: pointer; transition: all 0.2s;
-        }
-        .tag:hover { 
-            border-color: var(--wb-accent); color: var(--wb-accent); 
-            background: rgba(203, 17, 171, 0.08); 
-        }
-        
-        .card-footer { 
-            border-top: 1px solid var(--border-color); padding-top: 16px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-top: auto; font-size: 13px; font-weight: 600; color: var(--text-muted); 
-        }
-        
+        .card-footer { border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 12px; font-weight: 600; color: var(--text-muted); }
         .status { display: flex; align-items: center; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
         .status-blue .dot { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.4); }
         .status-red .dot { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.4); }
         .status-green .dot { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.4); }
-        
-        .card-footer-action { color: var(--text-main); display: flex; align-items: center; gap: 4px; transition: color 0.2s; }
+        .card-footer-action { color: var(--text-main); display: flex; align-items: center; transition: 0.2s; }
         .card:hover .card-footer-action { color: var(--wb-accent); }
 
-        .skeleton-card {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
-            padding: 24px; min-height: 220px; display: flex; flex-direction: column; position: relative; overflow: hidden;
-        }
-        .skeleton-shimmer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-        :root[data-theme="light"] .skeleton-shimmer {
-            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);
-        }
+        .skeleton-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; min-height: 200px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .skeleton-shimmer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent); animation: shimmer 1.5s infinite; }
+        :root[data-theme="light"] .skeleton-shimmer { background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent); }
         @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        
-        .skeleton-line { background: var(--border-color); border-radius: 6px; margin-bottom: 14px; }
-        .skeleton-line.title { width: 55%; height: 22px; margin-bottom: 24px; }
-        .skeleton-line.desc1 { width: 92%; height: 14px; }
-        .skeleton-line.desc2 { width: 78%; height: 14px; margin-bottom: 24px; }
-        .skeleton-line.footer { width: 35%; height: 14px; margin-top: auto; border-radius: 4px; }
+        .skeleton-line { background: var(--border-color); border-radius: 6px; margin-bottom: 12px; }
+        .skeleton-line.title { width: 60%; height: 20px; margin-bottom: 20px; }
+        .skeleton-line.desc1 { width: 90%; height: 12px; }
+        .skeleton-line.desc2 { width: 70%; height: 12px; margin-bottom: 20px; }
+        .skeleton-line.footer { width: 40%; height: 12px; margin-top: auto; border-radius: 4px; }
 
-        .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; animation: fadeIn 0.3s ease; }
-        .empty-state-icon { font-size: 48px; opacity: 0.5; margin-bottom: 16px; display: inline-block; }
-        .empty-state h3 { margin: 0 0 8px 0; color: var(--text-main); font-size: 18px; }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; }
+        .empty-state-icon { font-size: 48px; opacity: 0.5; margin-bottom: 12px; display: inline-block; }
+        .empty-state h3 { margin: 0 0 8px 0; font-size: 18px; }
         .empty-state p { color: var(--text-muted); margin: 0; font-size: 14px; }
 
-        .footer-copyright { text-align: center; margin-top: 80px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; opacity: 0.4; }
+        .footer-copyright { text-align: center; padding: 30px 0 20px 0; font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); opacity: 0.4; }
 
-        #toast {
-            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--text-main); color: var(--bg-color); 
-            padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 2000; pointer-events: none;
-        }
-        #toast.show { bottom: 40px; }
+        #toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: var(--bg-color); padding: 12px 24px; border-radius: 100px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: bottom 0.4s; z-index: 2000; pointer-events: none; }
+        #toast.show { bottom: calc(24px + env(safe-area-inset-bottom)); }
     </style>
 </head>
 <body>
@@ -290,7 +144,7 @@
         <div class="input-wrapper">
             <input type="password" id="passwordInput" placeholder="Введите пароль">
         </div>
-        <button class="primary-btn" onclick="checkPassword()">Войти в систему</button>
+        <button class="primary-btn" id="loginBtn">Войти в систему</button>
         <div id="errorMsg" class="error-msg">Неверный пароль. Попробуйте еще раз.</div>
     </div>
 </div>
@@ -298,24 +152,18 @@
 <div class="container" id="mainContainer">
     <div class="sticky-header">
         <div class="header-area">
-            <h1>Навигатор Софрино</h1>
+            <h1>Навигатор Софрино <span id="userBadge" class="user-badge"></span></h1>
             <div class="header-actions">
-                <button class="icon-btn" onclick="loadAllDefaultSheets(true)" title="Обновить данные">🔄</button>
-                <button class="icon-btn" onclick="toggleTheme()" id="themeIcon" title="Сменить тему">☀️</button>
-                <button class="share-btn" onclick="shareApp()">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                    </svg>
-                    Поделиться
-                </button>
+                <button class="icon-btn" id="refreshBtn" title="Обновить данные">🔄</button>
+                <button class="icon-btn" id="themeIcon" title="Сменить тему">☀️</button>
+                <button class="share-btn" id="shareBtn">📤 Поделиться</button>
+                <button class="icon-btn" id="logoutBtn" title="Выйти">🚪</button>
             </div>
         </div>
         <div class="search-container">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="searchInput" placeholder="Поиск по базе ресурсов (нажмите / для фокуса)..." oninput="filterCards()">
-            <button id="clearSearchBtn" class="clear-btn" onclick="clearSearch()">&times;</button>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" placeholder="Поиск по базе ресурсов (нажмите / для фокуса)...">
+            <button id="clearSearchBtn" class="clear-btn">&times;</button>
         </div>
         <nav class="nav-tabs" id="tabsContainer"></nav>
     </div>
@@ -329,430 +177,396 @@
 <div id="toast">Уведомление</div>
 
 <script>
-const SHEET_ID = '1FPHPwKeBmFrMqp2YWTmgN8xvrlsVaKZrrXd5oe8KoWg'; 
+// ==========================================
+// ВСТАВЬТЕ СЮДА НОВУЮ ССЫЛКУ ИЗ APPS SCRIPT!
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/ВАШ_ИДЕНТИФИКАТОР_ИЗ_APPS_SCRIPT/exec';
+// ==========================================
+
+const STORAGE_KEYS = {
+    token: 'sof_auth_token',
+    user: 'sof_auth_user',
+    favorites: 'sof_favorites',
+    theme: 'sof_theme',
+    cache: 'sof_data_cache'
+};
 
 let linksData = [];
 let currentTab = 'Главная';
+let favorites = safeGetJSON(STORAGE_KEYS.favorites, []);
+let clickStats = safeGetJSON('sof_click_stats', {});
+let searchTimeout = null;
 
-let favorites = [];
-try {
-    favorites = JSON.parse(localStorage.getItem('wb_favorites')) || [];
-} catch(e) {}
-
-let clickStats = {};
-try {
-    clickStats = JSON.parse(localStorage.getItem('wb_click_stats')) || {};
-} catch(e) {}
-
-function trackClick(title) {
-    clickStats[title] = (clickStats[title] || 0) + 1;
-    try { localStorage.setItem('wb_click_stats', JSON.stringify(clickStats)); } catch(e) {}
-}
-
-const defaultTabsConfig = {
-    'Избранное': '⭐ Избранное',
-    'Главная': '🏠 Главная',
-    'Входящий поток': '📥 Входящий поток',
-    'Интернет Ресурсы': '🌐 Интернет Ресурсы',
-    'Обучение': '🎓 Обучение'
-};
-
+const defaultTabsConfig = { 'Избранное': '⭐ Избранное', 'Главная': '🏠 Главная', 'Входящий поток': '📥 Входящий поток', 'Интернет Ресурсы': '🌐 Интернет Ресурсы', 'Обучение': '🎓 Обучение' };
 const tabsList = ['Избранное', 'Главная', 'Входящий поток', 'Интернет Ресурсы', 'Обучение'];
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", initApp);
+
+function initApp() {
     initTheme();
-    document.addEventListener('keydown', function(e) {
-        const searchInput = document.getElementById('searchInput');
-        if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT') {
-            e.preventDefault();
-            searchInput.focus();
-        } else if (e.key === 'Escape' && document.activeElement === searchInput) {
-            clearSearch();
-            searchInput.blur();
+    bindEvents();
+    
+    // Тихая миграция старых сессий: если у пользователя висит старый флаг "isLoggedIn", обменяем его
+    const oldLogin = sessionStorage.getItem('isLoggedIn');
+    let savedToken = localStorage.getItem(STORAGE_KEYS.token);
+    
+    // Если есть старый PIN в sessionStorage или localStorage (если вы его так сохраняли)
+    if (oldLogin === 'true' && !savedToken) {
+        // Если мы не знаем PIN, просим перелогиниться 1 раз для безопасности
+        sessionStorage.removeItem('isLoggedIn');
+        showLoginScreen();
+        return;
+    }
+
+    if (savedToken) {
+        showAppScreen();
+        const savedUser = localStorage.getItem(STORAGE_KEYS.user);
+        if (savedUser) updateUserBadge(savedUser);
+        loadProtectedData(savedToken, false);
+    } else {
+        showLoginScreen();
+    }
+}
+
+function bindEvents() {
+    document.getElementById('loginBtn').addEventListener('click', handleManualLogin);
+    document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleManualLogin(); });
+    document.getElementById('refreshBtn').addEventListener('click', () => loadProtectedData(localStorage.getItem(STORAGE_KEYS.token), true));
+    document.getElementById('themeIcon').addEventListener('click', toggleTheme);
+    document.getElementById('shareBtn').addEventListener('click', shareApp);
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        if(confirm('Выйти из системы?')) {
+            localStorage.removeItem(STORAGE_KEYS.token);
+            localStorage.removeItem(STORAGE_KEYS.user);
+            localStorage.removeItem(STORAGE_KEYS.cache);
+            showLoginScreen('Вы вышли из системы');
         }
     });
-});
+
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    searchInput.addEventListener('input', e => {
+        clearBtn.style.display = e.target.value.length > 0 ? 'flex' : 'none';
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => renderCards(e.target.value.trim()), 150);
+    });
+    clearBtn.addEventListener('click', () => { searchInput.value = ''; clearBtn.style.display = 'none'; renderCards(); });
+
+    document.getElementById('tabsContainer').addEventListener('click', e => {
+        const btn = e.target.closest('button[data-tab]');
+        if (!btn) return;
+        currentTab = btn.dataset.tab;
+        renderTabs();
+        renderCards(searchInput.value.trim());
+    });
+
+    document.getElementById('contentArea').addEventListener('click', e => {
+        const favBtn = e.target.closest('.fav-btn');
+        if (favBtn) {
+            e.preventDefault(); e.stopPropagation();
+            toggleFavorite(favBtn.dataset.id);
+            return;
+        }
+        const tag = e.target.closest('.tag');
+        if (tag) {
+            e.preventDefault(); e.stopPropagation();
+            searchInput.value = tag.dataset.tag;
+            clearBtn.style.display = 'flex';
+            renderCards(tag.dataset.tag);
+            return;
+        }
+        const card = e.target.closest('.card-link');
+        if (card && card.tagName !== 'A') {
+            trackClick(card.dataset.title);
+            shareTargetLink(card.dataset.url, card.dataset.title, 'Обратите внимание:');
+        } else if (card && card.tagName === 'A') {
+            trackClick(card.dataset.title);
+        }
+    });
+
+    document.addEventListener('keydown', e => {
+        const active = document.activeElement;
+        if (e.key === '/' && active !== searchInput && active.tagName !== 'INPUT') {
+            e.preventDefault(); searchInput.focus();
+        } else if (e.key === 'Escape' && active === searchInput) {
+            searchInput.value = ''; clearBtn.style.display = 'none'; searchInput.blur(); renderCards();
+        }
+    });
+}
+
+function showLoginScreen(msg = '') {
+    document.getElementById('appContainer').style.display = 'none';
+    document.getElementById('authOverlay').style.display = 'flex';
+    const err = document.getElementById('errorMsg');
+    if (msg) { err.textContent = msg; err.style.display = 'block'; }
+    else { err.style.display = 'none'; }
+}
+
+function showAppScreen() {
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'flex';
+}
+
+function updateUserBadge(name) {
+    const badge = document.getElementById('userBadge');
+    if (name && name !== 'Сотрудник') { badge.textContent = name; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+}
+
+async function requestServer(action, payload = {}) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
+    try {
+        const resp = await fetch(GAS_ENDPOINT, { method: 'POST', body: JSON.stringify({ action, ...payload }), signal: controller.signal });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        return await resp.json();
+    } finally { clearTimeout(timer); }
+}
+
+async function handleManualLogin() {
+    const pwd = document.getElementById('passwordInput').value.trim();
+    if (!pwd) return;
+    
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('errorMsg');
+    btn.disabled = true; btn.textContent = 'Проверка...'; err.style.display = 'none';
+
+    try {
+        const data = await requestServer('auth', { token: pwd });
+        if (data && data.ok) {
+            localStorage.setItem(STORAGE_KEYS.token, data.sessionToken || pwd);
+            localStorage.setItem(STORAGE_KEYS.user, data.user || 'Сотрудник');
+            updateUserBadge(data.user);
+            document.getElementById('passwordInput').value = '';
+            showAppScreen();
+            applyData(data, false);
+            showToast(`Добро пожаловать, ${data.user || 'коллега'}!`);
+        } else {
+            err.textContent = data.error || 'Неверный пароль'; err.style.display = 'block';
+        }
+    } catch (e) {
+        err.textContent = 'Ошибка сети'; err.style.display = 'block';
+    } finally {
+        btn.disabled = false; btn.textContent = 'Войти в систему';
+    }
+}
+
+async function loadProtectedData(token, isManual = false) {
+    const cached = safeGetJSON(STORAGE_KEYS.cache, []);
+    if (cached.length > 0 && !isManual) {
+        linksData = cached;
+        renderTabs(); renderCards();
+    } else {
+        showSkeletons();
+    }
+
+    try {
+        const data = await requestServer('getData', { token });
+        if (!data || !data.ok) {
+            localStorage.removeItem(STORAGE_KEYS.token);
+            showLoginScreen(data.error || 'Сессия истекла');
+            return;
+        }
+        if (data.sessionToken) localStorage.setItem(STORAGE_KEYS.token, data.sessionToken);
+        if (data.user) { localStorage.setItem(STORAGE_KEYS.user, data.user); updateUserBadge(data.user); }
+        applyData(data, isManual);
+    } catch (e) {
+        if (cached.length > 0) {
+            linksData = cached; renderTabs(); renderCards();
+            if (isManual) showToast('⚠️ Нет сети: показан кэш');
+        } else {
+            document.getElementById('contentArea').innerHTML = '<div class="empty-state"><h3>⚠️ Ошибка загрузки базы</h3></div>';
+        }
+    }
+}
+
+function applyData(data, isManual) {
+    if (data.links) {
+        linksData = data.links;
+        safeSetJSON(STORAGE_KEYS.cache, linksData);
+    }
+    favorites = favorites.filter(favId => linksData.some(l => l.id === favId));
+    safeSetJSON(STORAGE_KEYS.favorites, favorites);
+    
+    renderTabs();
+    renderCards(document.getElementById('searchInput').value.trim());
+    if (isManual) showToast('Данные обновлены');
+}
 
 function showSkeletons() {
     const container = document.getElementById('contentArea');
-    const skeletonHTML = '<div class="skeleton-card"><div class="skeleton-shimmer"></div><div class="skeleton-line title"></div><div class="skeleton-line desc1"></div><div class="skeleton-line desc2"></div><div class="skeleton-line footer"></div></div>';
-    container.innerHTML = skeletonHTML.repeat(6);
-}
-
-function makeStableId(sheetName, title) {
-    return 'item_' + sheetName + '_' + title.toLowerCase().replace(/[^a-zа-яё0-9]/gi, '_');
-}
-
-function loadAllDefaultSheets(isManualRefresh = false) {
-    showSkeletons();
-    linksData = [];
-    const targetSheets = ['Главная', 'Входящий поток', 'Интернет Ресурсы', 'Обучение'];
-    let completed = 0;
-    
-    targetSheets.forEach(sheetName => {
-        fetchSingleSheetData(sheetName, () => {
-            completed++;
-            if (completed === targetSheets.length) {
-                const validIds = new Set(linksData.map(l => l.id));
-                favorites = favorites.filter(id => validIds.has(id));
-                try { localStorage.setItem('wb_favorites', JSON.stringify(favorites)); } catch(e) {}
-
-                renderTabs();
-                renderCards(document.getElementById('searchInput').value.trim());
-                if (isManualRefresh) showToast('Данные обновлены');
-            }
-        });
-    });
-}
-
-function fetchSingleSheetData(sheetName, callback) {
-    const callbackName = 'handler_' + Math.random().toString(36).substring(2, 11);
-    const script = document.createElement('script');
-    
-    window[callbackName] = function(data) {
-        if (data && data.table && data.table.rows) {
-            data.table.rows.forEach(row => {
-                if (!row.c || !row.c[0] || !row.c[0].v) return;
-                
-                let title = String(row.c[0]?.v || '').trim();
-                let url = String(row.c[5]?.v || '#').trim();
-                
-                if (!title || title.toLowerCase() === 'название') return;
-
-                linksData.push({
-                    id: makeStableId(sheetName, title),
-                    tab: sheetName,
-                    title: title,
-                    desc: String(row.c[1]?.v || ''),
-                    tags: row.c[2]?.v ? String(row.c[2].v).split(',').map(t => t.trim()).filter(Boolean) : [],
-                    status: String(row.c[3]?.v || 'blue'),
-                    statusText: String(row.c[4]?.v || 'Инфо'),
-                    url: url,
-                    iconEmoji: String(row.c[6]?.v || '📦'),
-                    iconUrl: String(row.c[7]?.v || '')
-                });
-            });
-        }
-        cleanup();
-        callback();
-    };
-
-    function cleanup() {
-        delete window[callbackName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-    }
-
-    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheetName)}&tqx=responseHandler:${callbackName}`;
-    script.onerror = function() { cleanup(); callback(); };
-    document.body.appendChild(script);
+    const skeleton = '<div class="skeleton-card"><div class="skeleton-shimmer"></div><div class="skeleton-line title"></div><div class="skeleton-line desc1"></div><div class="skeleton-line desc2"></div><div class="skeleton-line footer"></div></div>';
+    container.innerHTML = skeleton.repeat(6);
 }
 
 function renderTabs() {
     const container = document.getElementById('tabsContainer');
-    container.innerHTML = '';
-
+    container.textContent = '';
     tabsList.forEach(tabId => {
-        let label = defaultTabsConfig[tabId] || tabId;
-        let count = tabId === 'Избранное' ? favorites.length : linksData.filter(l => l.tab === tabId).length;
+        const label = defaultTabsConfig[tabId] || tabId;
+        const count = tabId === 'Избранное' ? favorites.length : linksData.filter(l => l.tab === tabId).length;
         
         const btn = document.createElement('button');
-        btn.className = `tab-button ${tabId === currentTab ? 'active' : ''}`;
-        btn.innerHTML = `${label} <span class="tab-count">${count}</span>`;
-        btn.onclick = () => {
-            currentTab = tabId;
-            clearSearch(false); 
-            renderTabs(); 
-            renderCards();
-        };
+        btn.className = 'tab-button' + (tabId === currentTab ? ' active' : '');
+        btn.dataset.tab = tabId;
+        
+        btn.appendChild(document.createTextNode(label + ' '));
+        const span = document.createElement('span');
+        span.className = 'tab-count'; span.textContent = count;
+        btn.appendChild(span);
         container.appendChild(btn);
     });
 }
 
-function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, m => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[m]));
-}
-
-function highlightText(text, query) {
-    const safeText = escapeHtml(text);
-    if (!query) return safeText;
-    const escapedQuery = escapeHtml(query).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const regex = new RegExp(`(${escapedQuery})`, 'gi');
-    return safeText.replace(regex, '<mark class="highlight">$1</mark>');
-}
-
 function renderCards(filterQuery = '') {
     const container = document.getElementById('contentArea');
-    container.innerHTML = '';
-    const isSearching = filterQuery.length > 0;
+    container.textContent = '';
     
-    let filteredLinks = linksData.filter(link => {
-        if (isSearching) {
-            const q = filterQuery.toLowerCase();
-            return link.title.toLowerCase().includes(q) || link.desc.toLowerCase().includes(q) || (link.tags && link.tags.some(t => t.toLowerCase().includes(q)));
-        }
+    const isSearch = filterQuery.length > 0;
+    const qLower = filterQuery.toLowerCase();
+    
+    let filtered = linksData.filter(link => {
+        if (isSearch) return link.title.toLowerCase().includes(qLower) || link.desc.toLowerCase().includes(qLower) || link.tags.some(t => t.toLowerCase().includes(qLower));
         if (currentTab === 'Избранное') return favorites.includes(link.id);
         return link.tab === currentTab;
     });
 
-    filteredLinks.sort((a, b) => (clickStats[b.title] || 0) - (clickStats[a.title] || 0));
+    filtered.sort((a, b) => (clickStats[b.title] || 0) - (clickStats[a.title] || 0));
 
-    if (filteredLinks.length === 0) {
-        if (isSearching) {
-            container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">🔍</span><h3>Ничего не найдено</h3><p>По вашему запросу «${escapeHtml(filterQuery)}» нет результатов.</p></div>`;
-        } else if (currentTab === 'Избранное') {
-            container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">⭐</span><h3>Нет избранных ресурсов</h3><p>Нажмите на звёздочку на любой карточке, чтобы она появилась здесь.</p></div>`;
-        } else {
-            container.innerHTML = `<div class="empty-state"><span class="empty-state-icon">📭</span><h3>Вкладка пуста</h3><p>На листе «${escapeHtml(currentTab)}» в Google Таблице пока нет записей.</p></div>`;
-        }
+    if (filtered.length === 0) {
+        const empty = document.createElement('div'); empty.className = 'empty-state';
+        empty.innerHTML = `<span class="empty-state-icon">${isSearch?'🔍':(currentTab==='Избранное'?'⭐':'📭')}</span><h3>${isSearch?'Ничего не найдено':(currentTab==='Избранное'?'Нет избранного':'Вкладка пуста')}</h3>`;
+        container.appendChild(empty);
         return;
     }
 
-    filteredLinks.forEach(link => {
+    const frag = document.createDocumentFragment();
+    filtered.forEach(link => {
         const isFav = favorites.includes(link.id);
-        const displayTitle = highlightText(link.title, filterQuery);
-        const displayDesc = highlightText(link.desc, filterQuery).replace(/\n/g, '<br>');
+        const isShare = link.tags.includes('Ссылка');
         
-        const tagsHtml = link.tags && link.tags.length > 0 
-            ? `<div class="tag-container">${link.tags.map(t => {
-                const displayTag = highlightText(t, filterQuery);
-                const safeAttrTag = escapeHtml(t);
-                return `<span class="tag" data-tag="${safeAttrTag}" onclick="filterByTag(event, this.getAttribute('data-tag'))">${displayTag}</span>`;
-              }).join('')}</div>` 
-            : '';
-            
-        const iconHtml = link.iconUrl 
-            ? `<img src="${escapeHtml(link.iconUrl)}" class="glass-icon" alt="icon">` 
-            : `<span class="emoji-icon">${escapeHtml(link.iconEmoji)}</span>`;
+        const wrapper = document.createElement(isShare ? 'div' : 'a');
+        wrapper.className = 'card-link';
+        wrapper.dataset.title = link.title; wrapper.dataset.url = link.url;
+        if (!isShare) { wrapper.href = link.url; wrapper.target = '_blank'; wrapper.rel = 'noopener'; }
 
-        const isShare = link.tags && link.tags.includes('Ссылка');
-        const safeStatus = link.status.toLowerCase().trim();
-        const badgeHtml = (clickStats[link.title] >= 5) ? `<div class="top-badge">🔥 Топ</div>` : '';
-
-        const cardContent = `
-            <div class="card status-${escapeHtml(safeStatus)}">
-                ${badgeHtml}
-                <div class="card-header">
-                    <div class="card-title-group">
-                        ${iconHtml}
-                        <h3>${displayTitle}</h3>
-                    </div>
-                    <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${escapeHtml(link.id)}" onclick="toggleFavorite(event, this.getAttribute('data-id'))">
-                        ${isFav ? '★' : '☆'}
-                    </button>
-                </div>
-                <p>${displayDesc}</p>
-                ${tagsHtml}
-                <div class="card-footer">
-                    <span class="status"><span class="dot"></span>${escapeHtml(link.statusText)}</span>
-                    <span class="card-footer-action">${isShare ? 'Поделиться ↗' : 'Открыть ↗'}</span>
-                </div>
-            </div>
-        `;
-
-        if (isShare) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'card-link'; wrapper.innerHTML = cardContent;
-            wrapper.onclick = (e) => {
-                if(!e.target.closest('.fav-btn') && !e.target.closest('.tag')) {
-                    trackClick(link.title); 
-                    shareTargetLink(link.url, link.title, 'Обратите внимание:');
-                }
-            };
-            container.appendChild(wrapper);
-        } else {
-            const a = document.createElement('a');
-            a.className = 'card-link'; a.href = link.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.innerHTML = cardContent;
-            a.onclick = (e) => {
-                if(e.target.closest('.fav-btn') || e.target.closest('.tag')) {
-                    e.preventDefault();
-                } else {
-                    trackClick(link.title); 
-                }
-            };
-            container.appendChild(a);
+        const card = document.createElement('div');
+        card.className = 'card status-' + link.status.toLowerCase();
+        
+        if (clickStats[link.title] >= 5) {
+            const badge = document.createElement('div'); badge.className = 'top-badge'; badge.textContent = '🔥 Топ';
+            card.appendChild(badge);
         }
+
+        const head = document.createElement('div'); head.className = 'card-header';
+        const titleGrp = document.createElement('div'); titleGrp.className = 'card-title-group';
+        
+        if (link.iconUrl) {
+            const img = document.createElement('img'); img.src = link.iconUrl; img.className = 'glass-icon';
+            titleGrp.appendChild(img);
+        } else {
+            const emj = document.createElement('span'); emj.className = 'emoji-icon'; emj.textContent = link.iconEmoji;
+            titleGrp.appendChild(emj);
+        }
+        
+        const h3 = document.createElement('h3'); h3.appendChild(highlight(link.title, filterQuery));
+        titleGrp.appendChild(h3); head.appendChild(titleGrp);
+
+        const favBtn = document.createElement('button'); favBtn.className = 'fav-btn' + (isFav ? ' active' : '');
+        favBtn.dataset.id = link.id; favBtn.textContent = isFav ? '★' : '☆';
+        head.appendChild(favBtn); card.appendChild(head);
+
+        const p = document.createElement('p'); p.appendChild(highlight(link.desc, filterQuery));
+        card.appendChild(p);
+
+        if (link.tags.length > 0) {
+            const tagsDiv = document.createElement('div'); tagsDiv.className = 'tag-container';
+            link.tags.forEach(t => {
+                const span = document.createElement('span'); span.className = 'tag'; span.dataset.tag = t;
+                span.appendChild(highlight(t, filterQuery)); tagsDiv.appendChild(span);
+            });
+            card.appendChild(tagsDiv);
+        }
+
+        const foot = document.createElement('div'); foot.className = 'card-footer';
+        const stDiv = document.createElement('div'); stDiv.className = 'status';
+        const dot = document.createElement('div'); dot.className = 'dot';
+        stDiv.append(dot, document.createTextNode(link.statusText));
+        
+        const actDiv = document.createElement('div'); actDiv.className = 'card-footer-action'; actDiv.textContent = isShare ? 'Поделиться ↗' : 'Открыть ↗';
+        foot.append(stDiv, actDiv); card.appendChild(foot);
+        
+        wrapper.appendChild(card); frag.appendChild(wrapper);
     });
+    container.appendChild(frag);
 }
 
-function filterByTag(event, tagText) {
-    event.preventDefault();
-    event.stopPropagation();
-    const searchInput = document.getElementById('searchInput');
-    searchInput.value = tagText;
-    filterCards();
-}
-
-function showToast(message) {
-    const toast = document.getElementById('toast');
-    toast.innerText = message; toast.classList.add('show');
-    setTimeout(() => { toast.classList.remove('show'); }, 2500);
-}
-
-function toggleFavorite(event, id) {
-    event.preventDefault(); event.stopPropagation();
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(favId => favId !== id);
-        showToast('Удалено из избранного');
-    } else {
-        favorites.push(id); showToast('Добавлено в избранное');
+function highlight(text, query) {
+    const frag = document.createDocumentFragment();
+    if (!query) { frag.appendChild(document.createTextNode(text)); return frag; }
+    const regex = new RegExp(`(${query.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+    let last = 0, match;
+    while ((match = regex.exec(text)) !== null) {
+        if (match.index > last) frag.appendChild(document.createTextNode(text.substring(last, match.index)));
+        const m = document.createElement('mark'); m.className = 'highlight'; m.textContent = match[0];
+        frag.appendChild(m); last = regex.lastIndex;
     }
-    try { localStorage.setItem('wb_favorites', JSON.stringify(favorites)); } catch(e) {}
-    renderTabs(); 
-    if (currentTab === 'Избранное') renderCards();
+    if (last < text.length) frag.appendChild(document.createTextNode(text.substring(last)));
+    return frag;
+}
+
+function toggleFavorite(id) {
+    const idx = favorites.indexOf(id);
+    if (idx > -1) { favorites.splice(idx, 1); showToast('Удалено'); }
+    else { favorites.push(id); showToast('Добавлено в избранное'); }
+    safeSetJSON(STORAGE_KEYS.favorites, favorites);
+    renderTabs(); if (currentTab === 'Избранное') renderCards();
     else {
-        const btn = event.currentTarget;
-        btn.classList.toggle('active'); btn.innerHTML = favorites.includes(id) ? '★' : '☆';
+        const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
+        if (btn) { btn.classList.toggle('active'); btn.textContent = favorites.includes(id) ? '★' : '☆'; }
     }
 }
+
+function trackClick(title) {
+    clickStats[title] = (clickStats[title] || 0) + 1;
+    safeSetJSON('sof_click_stats', clickStats);
+}
+
+function safeGetJSON(key, fb) { try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : fb; } catch(e) { return fb; } }
+function safeSetJSON(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch(e) {} }
 
 function initTheme() {
-    let savedTheme = 'dark';
-    try {
-        savedTheme = localStorage.getItem('theme') || 'dark';
-    } catch (e) {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-            savedTheme = 'light';
-        }
-    }
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeIcon();
-}
-
-function updateThemeIcon() {
-    const icon = document.getElementById('themeIcon');
-    if (icon) icon.innerText = document.documentElement.getAttribute('data-theme') === 'light' ? '🌙' : '☀️';
+    let t = localStorage.getItem(STORAGE_KEYS.theme) || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeIcon').textContent = t === 'light' ? '🌙' : '☀️';
 }
 
 function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    try { localStorage.setItem('theme', newTheme); } catch (e) {}
-    updateThemeIcon();
+    const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem(STORAGE_KEYS.theme, t);
+    document.getElementById('themeIcon').textContent = t === 'light' ? '🌙' : '☀️';
 }
 
-function filterCards() {
-    const query = document.getElementById('searchInput').value.trim();
-    const container = document.getElementById('mainContainer');
-    const clearBtn = document.getElementById('clearSearchBtn');
-    
-    if (query.length > 0) {
-        container.classList.add('searching');
-        clearBtn.style.display = 'flex';
-    } else {
-        container.classList.remove('searching');
-        clearBtn.style.display = 'none';
-    }
-    renderCards(query);
+function showToast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
 }
-
-function clearSearch(shouldRender = true) {
-    const input = document.getElementById('searchInput');
-    input.value = '';
-    document.getElementById('clearSearchBtn').style.display = 'none';
-    document.getElementById('mainContainer').classList.remove('searching');
-    if (shouldRender) renderCards();
-}
-
-// ПРОВЕРКА ПАРОЛЯ (МЕТОД JSONP)
-function checkPassword() {
-    const pwdInput = document.getElementById('passwordInput');
-    const pwd = pwdInput.value.trim();
-    const btn = document.querySelector('.primary-btn');
-    const errorMsg = document.getElementById('errorMsg');
-
-    if (!pwd) return;
-
-    const originalBtnText = btn.innerText;
-    btn.innerText = "Проверка...";
-    btn.disabled = true;
-    errorMsg.style.display = 'none';
-
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxEFFUCXl25LxzQ3GwQCNs5K2ePQm221BsjR_IoKQkwU_fuR55G_Y7FrwOmGZjCdYyGDg/exec';
-    const callbackName = 'auth_cb_' + Math.random().toString(36).substring(2, 9);
-
-    window[callbackName] = function(result) {
-        cleanup();
-        if (result && result.success) {
-            sessionStorage.setItem('isLoggedIn', 'true');
-            sessionStorage.setItem('userName', result.user);
-            
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainContainer').style.display = 'block';
-            
-            showToast('Добро пожаловать, ' + result.user + '!');
-            loadAllDefaultSheets(); 
-        } else {
-            errorMsg.innerText = "Неверный пароль или доступ закрыт.";
-            errorMsg.style.display = 'block';
-            pwdInput.value = '';
-        }
-        btn.innerText = originalBtnText;
-        btn.disabled = false;
-    };
-
-    const script = document.createElement('script');
-    script.src = `${scriptURL}?password=${encodeURIComponent(pwd)}&callback=${callbackName}`;
-    script.onerror = function() {
-        cleanup();
-        errorMsg.innerText = "Ошибка соединения. Проверьте интернет.";
-        errorMsg.style.display = 'block';
-        btn.innerText = originalBtnText;
-        btn.disabled = false;
-    };
-
-    function cleanup() {
-        delete window[callbackName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-    }
-
-    document.body.appendChild(script);
-}
-
-window.onload = function() {
-    if (sessionStorage.getItem('isLoggedIn') === 'true') {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainContainer').style.display = 'block';
-        loadAllDefaultSheets(); 
-    }
-};
-
-document.getElementById('passwordInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') checkPassword(); });
 
 async function shareApp() {
-    try {
-        const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-        const file = new File([new Blob([htmlContent], { type: "text/html" })], "Navigator_Sofrino.html", { type: "text/html" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: 'Навигатор Софрино', text: 'Файл Навигатора.' });
-        } else {
-            const link = document.createElement("a"); link.href = URL.createObjectURL(file); link.download = "Navigator_Sofrino.html";
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        }
-    } catch (e) { console.log(e); }
+    const u = window.location.href;
+    if (navigator.share) navigator.share({ title: 'Навигатор Софрино', url: u }).catch(()=>{});
+    else { navigator.clipboard.writeText(u); showToast('Ссылка скопирована'); }
 }
-
 async function shareTargetLink(url, title, text) {
-    if (navigator.share) {
-        try { await navigator.share({ title: title, text: text + ' ' + url, url: url }); } 
-        catch (e) { console.log(e); }
-    } else {
-        try { await navigator.clipboard.writeText(url); showToast('Ссылка скопирована!'); } 
-        catch (e) { showToast('Ошибка копирования'); }
-    }
+    if (navigator.share) navigator.share({ title, text: text + ' ' + url, url }).catch(()=>{});
+    else { navigator.clipboard.writeText(url); showToast('Ссылка скопирована'); }
 }
 </script>
 
-<!-- РЕГИСТРАЦИЯ SERVICE WORKER -->
+<!-- Установка PWA -->
 <script>
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker зарегистрирован.'))
-                .catch(err => console.log('Ошибка Service Worker:', err));
-        });
+        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
     }
 </script>
 </body>
